@@ -1564,8 +1564,12 @@ class Wav2Vec2ForMaskedLM(Wav2Vec2PreTrainedModel):
     WAV_2_VEC_2_START_DOCSTRING,
 )
 class Wav2Vec2ForCTC(Wav2Vec2PreTrainedModel):
-    def __init__(self, config):
+    def __init__(self, config, output_layer_index: int = None):
         super().__init__(config)
+        if output_layer_index is not None:
+            assert output_layer_index >= 0
+            assert output_layer_index <= config.num_hidden_layers
+            config.num_hidden_layers = output_layer_index
 
         self.wav2vec2 = Wav2Vec2Model(config)
         self.dropout = nn.Dropout(config.final_dropout)
